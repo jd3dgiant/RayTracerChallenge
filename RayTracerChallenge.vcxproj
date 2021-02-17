@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Raytracer\Canvas.cpp" />
     <ClCompile Include="Raytracer\RayTracerChallenge.cpp" />
     <ClCompile Include="Raytracer\pch.cpp">
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">pch.h</PrecompiledHeaderFile>
@@ -29,6 +30,7 @@
     <ClCompile Include="Raytracer\Tuples.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Raytracer\Canvas.h" />
     <ClInclude Include="Raytracer\pch.h" />
     <ClInclude Include="Raytracer\RayTracerChallenge.h" />
     <ClInclude Include="Raytracer\targetver.h" />

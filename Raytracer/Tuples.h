@@ -1,5 +1,10 @@
 ﻿#pragma once
+#include <algorithm>
 #include <cmath> 
+
+///
+/// Structures for data types used in the raytracer
+///
 
 class Tuple {
 	public:
@@ -45,6 +50,7 @@ class Tuple {
 			components[0] = rhs.x();
 			components[1] = rhs.y();
 			components[2] = rhs.z();
+			components[3] = rhs.w();
 		}
 
 		Tuple operator-() const {
@@ -130,4 +136,37 @@ class Point3 : public Tuple {
 		Point3 operator-(const Vector3 &rhs) const {
 			return Point3(x() - rhs.x(), y() - rhs.y(), z() - rhs.z());
 		}
+};
+
+
+class Color : public Tuple {
+public:
+	//Color() {
+	//	this->components = Tuple(0, 0, 0, 0).components;
+	//}
+
+	Color() :
+		Tuple(0, 0, 0, 0) {}
+
+	Color(float in0, float in1, float in2) :
+		Tuple(in0, in1, in2, 1.0) {}
+
+	Color(float in0, float in1, float in2, float in3) :
+		Tuple(in0, in1, in2, in3) {}
+
+	Color operator+(const Color &rhs) const {
+		return Color(r() + rhs.r(), g() + rhs.g(), b() + rhs.b());// , std::min(float(1.0), a() + rhs.a()));
+	}
+
+	Color operator-(const Color &rhs) const {
+		return Color(r() - rhs.r(), g() - rhs.g(), b() - rhs.b());//, std::max(float(0.0), a() - rhs.a()));
+	}
+
+	Color operator*(const float &rhs) const {
+		return Color(r() * rhs, g() * rhs, b() * rhs);//, w() * rhs);
+	}
+
+	Color operator*(const Color &rhs) const {
+		return Color(r() * rhs.r(), g() * rhs.g(), b() * rhs.b());//, w() * rhs);
+	}
 };
