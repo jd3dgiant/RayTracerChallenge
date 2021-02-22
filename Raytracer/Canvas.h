@@ -1,30 +1,45 @@
 #pragma once
 
-#include <Vector>
+#include <iostream>
+#include <fstream>
+#include <string>
 #include "Tuples.h"
 
 class Canvas {
-	public:
-		Canvas(int inWidth, int inHeight) :
-			width(inWidth), height(inHeight) {
-			//pixelColors = new Color[inWidth * inHeight];
-			pixelColors.resize(inWidth * inHeight);
+    public:
+		Canvas(int inWidth, int inHeight)
+		: _width(inWidth), _height(inHeight), _totalPixelCount(inWidth * inHeight){
+			_pixelColors = new Color[inWidth * inHeight];
 		}
-		
-		//~Canvas()
-		//{
-		//	delete[] pixelColors;
-		//}
 
+		~Canvas() {
+			delete[] _pixelColors;
+		}
 
-		int width;
-		int height;
+		const int BITCOLORMAX = 255;
+        const int MAXPPMLINELENGTH = 68; // true value is 70 but if this threshold is crossed then '\n' is added instead bringing the length to 70
 
-		std::vector<Color> pixelColors;
-		//Color* pixelColors;
+        int _totalPixelCount;
 
-		Color getPixelColor(Canvas& canvas, int index);
+		int _width;
+		int _height;
 
-		void write_pixel(Canvas& canvas, int x, int y, Color& color);
+		Color *_pixelColors;
+
+		Color getPixelColor(int index) const;
+
+		void write_pixel(int x, int y, Color &color);
+
+		std::string canvasToPpm(bool headerOnly = false);
+
+        void saveToDisk(const char* filePath);
+
+    private:
+		std::string canvasToPpmHeader();
+
+        void addColorValueToPPMOutput(int &ppmLineLength, float pixelChannelVal, std::string& ppmBodyStr);
+
+        int convertColorFloatToInt(float inputVal);
+
+		int clampChannelValue(int inputVal) const;
 };
-

@@ -8,7 +8,8 @@
 
 class Tuple {
 	public:
-		Tuple() {}
+		Tuple() : 
+			components{ 0,0,0,0 } {}
 
 		Tuple(float in0, float in1, float in2, float in3) {
 			components[0] = in0;
@@ -90,6 +91,14 @@ class Vector3 : public Tuple {
 			return Vector3(x() - rhs.x(), y() - rhs.y(), z() - rhs.z());
 		}
 
+        Vector3 operator*(const float &rhs) const {
+            return Vector3(x() * rhs, y() * rhs, z() * rhs);
+        }
+
+        Vector3 operator/(const float &rhs) const {
+            return Vector3(x() / rhs, y() / rhs, z() / rhs);
+        }
+
 		float magnitude() const {
 			float totalLength = 0;
 			for (unsigned i = 0; i < 4; i++) { // come back and figure out how to compile the size
@@ -141,12 +150,7 @@ class Point3 : public Tuple {
 
 class Color : public Tuple {
 public:
-	//Color() {
-	//	this->components = Tuple(0, 0, 0, 0).components;
-	//}
-
-	Color() :
-		Tuple(0, 0, 0, 0) {}
+	Color() {}
 
 	Color(float in0, float in1, float in2) :
 		Tuple(in0, in1, in2, 1.0) {}
