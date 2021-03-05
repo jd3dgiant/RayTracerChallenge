@@ -27,6 +27,9 @@
     <ClCompile Include="Raytracer\Canvas.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Raytracer\Matrix.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Raytracer\targetver.h">
@@ -42,6 +45,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Raytracer\Canvas.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Raytracer\Matrix.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
