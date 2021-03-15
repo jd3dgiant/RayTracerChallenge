@@ -1,7 +1,6 @@
 ﻿#pragma once
 #include <algorithm>
-#include <cmath> 
-
+#include "utils.h"
 ///
 /// Structures for data types used in the raytracer
 ///
@@ -27,12 +26,8 @@ class Tuple {
 		float b() const { return components[2]; }
 		float a() const { return components[3]; }
 
-		bool IsEqual(float lhs, float rhs) const {
-			return std::abs(lhs - rhs) < EPSILON;
-		}
-
 		bool IsVector3() const {
-			return IsEqual(w(), 0.0f);
+			return utils::IsEqual(w(), 0.0f);
 		}
 
 		bool IsPoint3() const {
@@ -40,7 +35,7 @@ class Tuple {
 		}
 
 		bool operator==(const Tuple &rhs) {
-			return IsEqual(x(), rhs.x()) && IsEqual(y(), rhs.y()) && IsEqual(z(), rhs.z()) && IsEqual(w(), rhs.w());
+			return utils::IsEqual(x(), rhs.x()) && utils::IsEqual(y(), rhs.y()) && utils::IsEqual(z(), rhs.z()) && utils::IsEqual(w(), rhs.w());
 		}
 
 		bool operator!=(const Tuple &rhs) {
@@ -69,9 +64,6 @@ class Tuple {
 		//constexpr float const TUPLESIZE = 4;
 
 		float components[4];
-
-	protected:
-		float const EPSILON = 0.0001;
 };
 
 class Vector3 : public Tuple {
@@ -109,7 +101,7 @@ class Vector3 : public Tuple {
 
 		Vector3 normalize() const {
 			float mag = magnitude();
-			if (mag < EPSILON) {
+			if (mag < utils::EPSILON) {
 				return zero();
 			}
 			return Vector3(x() / mag, y() / mag, z() / mag);

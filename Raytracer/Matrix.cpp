@@ -1,10 +1,79 @@
 ﻿#include "Matrix.h"
 #include "pch.h"
 
+using namespace jdRay;
+
+// Matrix3x3
+template <typename valueT>
+Matrix2x2<valueT> Matrix3x3<valueT>::submatrix(int rowRemove, int colRemove) const {
+  std::array<valueT, 4> subMData;
+
+  unsigned indexCounter = 0;
+  for (unsigned i = 0; i < ROWSIZE; ++i) {
+    if (i == rowRemove) {
+      continue;
+    }
+    for (unsigned j = 0; j < ROWSIZE; ++j) {
+      if (j == colRemove) {
+        continue;
+      }
+      subMData[indexCounter] = (*this)(i, j);
+      indexCounter++;
+    }
+  }
+
+  return Matrix2x2<valueT>(subMData);
+}
+// end Matrix3x3
+
+// Matrix4x4
+template <typename valueT>
+Matrix3x3<valueT> Matrix4x4<valueT>::submatrix(int rowRemove, int colRemove) const {
+  std::array<valueT, 9> subMData;
+
+  unsigned indexCounter = 0;
+  for (unsigned i = 0; i < ROWSIZE; ++i) {
+    if (i == rowRemove) {
+      continue;
+    }
+    for (unsigned j = 0; j < ROWSIZE; ++j) {
+      if (j == colRemove) {
+        continue;
+      }
+      subMData[indexCounter] = (*this)(i, j);
+      indexCounter++;
+    }
+  }
+  return Matrix3x3<valueT>(subMData);
+}
+
+template <typename valueT>
+Matrix4x4<valueT> Matrix4x4<valueT>::inverse() {
+  return Matrix4x4<valueT>(inverseCache);
+}
+
+template <typename valueT>
+Matrix4x4<valueT> Matrix4x4<valueT>::inverseSlow() const {
+  assert(invertible());
+
+  Matrix4x4<valueT> invertM;
+  for (unsigned i = 0; i < ROWSIZE; ++i) {
+    for (unsigned j = 0; j < ROWSIZE; ++j) {
+      valueT cFactor = cofactor(i, j);
+      // note that "col, row" here, instead of "row, col",
+      // accomplishes the transpose operation!
+      invertM(j, i) = cFactor / determinant();
+    }
+  }
+  return invertM;
+}
+
+// end Matrix4x4
+
 template <typename matrixValueT>
-Matrix<matrixValueT> Matrix<matrixValueT>::identity(int matrixSquareSize) {
+MatrixXxX<matrixValueT> MatrixXxX<matrixValueT>::identity(int matrixSquareSize) {
   // this will only work properly with matrices that are square in size
-  Matrix<matrixValueT> identityMatrix(matrixSquareSize, matrixSquareSize);
+  MatrixXxX<matrixValueT> identityMatrix(matrixSquareSize, matrixSquareSize);
 
   for (unsigned i = 0; i < matrixSquareSize; ++i) {
     for (unsigned j = 0; j < matrixSquareSize; ++j) {
@@ -15,28 +84,18 @@ Matrix<matrixValueT> Matrix<matrixValueT>::identity(int matrixSquareSize) {
       }
     }
   }
-  return identityMatrix; // TODO can this be a reference
+  return identityMatrix; // TODO does this copy or return by reference
 }
 
 template <typename matrixValueT>
-matrixValueT& Matrix<matrixValueT>::operator()(size_t i, size_t j) {
-  return mData[i * mCols + j];
-}
-
-template <typename matrixValueT>
-matrixValueT Matrix<matrixValueT>::operator()(size_t i, size_t j) const {
-  return mData[i * mCols + j];
-}
-
-template <typename matrixValueT>
-bool Matrix<matrixValueT>::operator==(const Matrix& rhs) const {
+bool MatrixXxX<matrixValueT>::operator==(const MatrixXxX& rhs) const {
   if (mRows != rhs.mRows || mCols != rhs.mCols) {
     return false;
   }
 
   for (unsigned i = 0; i < mRows; ++i) {
     for (unsigned j = 0; j < mCols; ++j) {
-      bool bEqual = IsEqual(mData[i * mCols + j], rhs.mData[i * mCols + j]);
+      bool bEqual = utils::IsEqual(mData[i * mCols + j], rhs.mData[i * mCols + j]);
       if (!bEqual) {
         return false;
       }
@@ -47,8 +106,8 @@ bool Matrix<matrixValueT>::operator==(const Matrix& rhs) const {
 }
 // TODO should add in check that matrix are same size
 template <typename matrixValueT>
-Matrix<matrixValueT> Matrix<matrixValueT>::operator*(const Matrix& rhs) const {
-  Matrix<matrixValueT> multMatrix(mRows, mCols);
+MatrixXxX<matrixValueT> MatrixXxX<matrixValueT>::operator*(const MatrixXxX& rhs) const {
+  MatrixXxX<matrixValueT> multMatrix(mRows, mCols);
   for (unsigned i = 0; i < mRows; ++i) {
     for (unsigned j = 0; j < mCols; ++j) {
       multMatrix(i, j) = (*this)(i, 0) * rhs(0, j) + (*this)(i, 1) * rhs(1, j) +
@@ -59,7 +118,7 @@ Matrix<matrixValueT> Matrix<matrixValueT>::operator*(const Matrix& rhs) const {
 }
 
 template <typename matrixValueT>
-Tuple Matrix<matrixValueT>::operator*(const Tuple& rhs) const {
+Tuple MatrixXxX<matrixValueT>::operator*(const Tuple& rhs) const {
   Tuple newTuple;
   for (unsigned i = 0; i < mRows; ++i) {
     newTuple.components[i] = (*this)(i, 0) * rhs.components[0] + (*this)(i, 1) * rhs.components[1] +
@@ -68,9 +127,9 @@ Tuple Matrix<matrixValueT>::operator*(const Tuple& rhs) const {
   return newTuple;
 }
 
-template <typename matrixValueT> // TODO can this return by reference
-Matrix<matrixValueT> Matrix<matrixValueT>::transpose() const {
-  Matrix<matrixValueT> tMatrix(mCols, mRows);
+template <typename matrixValueT>
+MatrixXxX<matrixValueT> MatrixXxX<matrixValueT>::transpose() const {
+  MatrixXxX<matrixValueT> tMatrix(mCols, mRows);
 
   for (unsigned i = 0; i < mRows; ++i) {
     for (unsigned j = 0; j < mCols; ++j) {
@@ -80,8 +139,8 @@ Matrix<matrixValueT> Matrix<matrixValueT>::transpose() const {
   return tMatrix;
 }
 
-template <typename matrixValueT> // TODO can this return by reference
-matrixValueT Matrix<matrixValueT>::determinant() const {
+template <typename matrixValueT>
+matrixValueT MatrixXxX<matrixValueT>::determinant() const {
   if (mRows == 2 && mCols == 2) {
     return (*this)(0, 0) * (*this)(1, 1) - (*this)(0, 1) * (*this)(1, 0);
   } else {
@@ -94,7 +153,7 @@ matrixValueT Matrix<matrixValueT>::determinant() const {
 }
 
 template <typename matrixValueT>
-Matrix<matrixValueT> Matrix<matrixValueT>::submatrix(int rowRemove, int colRemove) const {
+MatrixXxX<matrixValueT> MatrixXxX<matrixValueT>::submatrix(int rowRemove, int colRemove) const {
   std::vector<matrixValueT> subMData;
 
   for (unsigned i = 0; i < mRows; ++i) {
@@ -109,26 +168,26 @@ Matrix<matrixValueT> Matrix<matrixValueT>::submatrix(int rowRemove, int colRemov
     }
   }
 
-  return Matrix<matrixValueT>(mRows - 1, mCols - 1, subMData);
+  return MatrixXxX<matrixValueT>(mRows - 1, mCols - 1, subMData);
 }
 
 template <typename matrixValueT>
-matrixValueT Matrix<matrixValueT>::minor(int row, int col) const {
+matrixValueT MatrixXxX<matrixValueT>::minor(int row, int col) const {
   return submatrix(row, col).determinant();
 }
 
 template <typename matrixValueT>
-matrixValueT Matrix<matrixValueT>::cofactor(int row, int col) const {
+matrixValueT MatrixXxX<matrixValueT>::cofactor(int row, int col) const {
   matrixValueT determinant = minor(row, col);
 
   return (row + col) % 2 == 0 ? determinant : -determinant;
 }
 
 template <typename matrixValueT>
-Matrix<matrixValueT> Matrix<matrixValueT>::inverse() const {
+MatrixXxX<matrixValueT> MatrixXxX<matrixValueT>::inverse() const {
   assert(invertible());
 
-  Matrix<matrixValueT> invertM(mRows, mCols);
+  MatrixXxX<matrixValueT> invertM(mRows, mCols);
   for (unsigned i = 0; i < mRows; ++i) {
     for (unsigned j = 0; j < mCols; ++j) {
       auto cFactor = cofactor(i, j);
@@ -138,4 +197,13 @@ Matrix<matrixValueT> Matrix<matrixValueT>::inverse() const {
     }
   }
   return invertM;
+}
+
+template <typename matrixValueT>
+template <typename valueT>
+inline MatrixXxX<matrixValueT>
+MatrixXxX<matrixValueT>::translationMatrix(valueT x, valueT y, valueT z) {
+  MatrixXxX<matrixValueT> identity = identity();
+
+  return MatrixXxX<matrixValueT>();
 }

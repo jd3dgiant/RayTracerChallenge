@@ -29,6 +29,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Use</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Raytracer\Tuples.cpp" />
+    <ClCompile Include="Raytracer\utils.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Raytracer\Canvas.h" />
@@ -37,6 +38,7 @@
     <ClInclude Include="Raytracer\RayTracerChallenge.h" />
     <ClInclude Include="Raytracer\targetver.h" />
     <ClInclude Include="Raytracer\Tuples.h" />
+    <ClInclude Include="Raytracer\utils.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
