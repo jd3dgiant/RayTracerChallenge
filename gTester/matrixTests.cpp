@@ -541,3 +541,163 @@ TEST(MatrixTransformationTests, PointNegativeScaleMatrix4x4) {
   Point3 p(2, 3, 4);
   EXPECT_TRUE(scaleM * p == Point3(-2, 3, 4));
 }
+
+// Scenario: Rotating a point around the x axis
+// Given p ← point(0, 1, 0)
+// And half_quarter ← rotation_x(π / 4)
+// And full_quarter ← rotation_x(π / 2)
+// Then half_quarter * p = point(0, √2/2, √2/2)
+// And full_quarter * p = point(0, 0, 1)
+TEST(MatrixTransformationTests, MatrixRotateX) {
+  Point3 p(0, 1, 0);
+  auto half_quarterR = Matrix4x4<double>::rotateX(utils::PI / 4);
+  auto full_quarterR = Matrix4x4<double>::rotateX(utils::PI / 2);
+  EXPECT_TRUE(half_quarterR * p == Point3(0, std::sqrt(2) / 2, std::sqrt(2) / 2));
+  EXPECT_TRUE(full_quarterR * p == Point3(0, 0, 1));
+}
+
+// Scenario: The inverse of an x-rotation rotates in the opposite direction
+// Given p ← point(0, 1, 0)
+// And half_quarter ← rotation_x(π / 4)
+// And inv ← inverse(half_quarter)
+// Then inv * p = point(0, √2/2, -√2/2)
+TEST(MatrixTransformationTests, MatrixInverseRotateX) {
+  Point3 p(0, 1, 0);
+  auto half_quarterR = Matrix4x4<double>::rotateX(utils::PI / 4);
+  auto inv = half_quarterR.inverse();
+  EXPECT_TRUE(inv * p == Point3(0, std::sqrt(2) / 2, -std::sqrt(2) / 2));
+}
+
+// Scenario: Rotating a point around the y axis
+// Given p ← point(0, 0, 1)
+// And half_quarter ← rotation_y(π / 4)
+// And full_quarter ← rotation_y(π / 2)
+// Then half_quarter * p = point(√2/2, 0, √2/2)
+// And full_quarter * p = point(1, 0, 0)
+TEST(MatrixTransformationTests, MatrixRotateY) {
+  Point3 p(0, 0, 1);
+  auto half_quarterR = Matrix4x4<double>::rotateY(utils::PI / 4);
+  auto full_quarterR = Matrix4x4<double>::rotateY(utils::PI / 2);
+  EXPECT_TRUE(half_quarterR * p == Point3(std::sqrt(2) / 2, 0, std::sqrt(2) / 2));
+  EXPECT_TRUE(full_quarterR * p == Point3(1, 0, 0));
+}
+
+// Scenario: Rotating a point around the z axis
+// Given p ← point(0, 1, 0)
+// And half_quarter ← rotation_z(π / 4)
+// And full_quarter ← rotation_z(π / 2)
+// Then half_quarter * p = point(-√2/2, √2/2, 0)
+// And full_quarter * p = point(-1, 0, 0)
+TEST(MatrixTransformationTests, MatrixRotateZ) {
+  Point3 p(0, 1, 0);
+  auto half_quarterR = Matrix4x4<double>::rotateZ(utils::PI / 4);
+  auto full_quarterR = Matrix4x4<double>::rotateZ(utils::PI / 2);
+  EXPECT_TRUE(half_quarterR * p == Point3(-std::sqrt(2) / 2, std::sqrt(2) / 2, 0));
+  EXPECT_TRUE(full_quarterR * p == Point3(-1, 0, 0));
+}
+
+// Scenario: A shearing transformation moves x in proportion to y
+// Given transform ← shearing(1, 0, 0, 0, 0, 0)
+// And p ← point(2, 3, 4)
+// Then transform * p = point(5, 3, 4)
+TEST(MatrixTransformationTests, MatrixShearingXToY) {
+  auto sheerM = Matrix4x4<double>::shear(1, 0, 0, 0, 0, 0);
+  Point3 p(2, 3, 4);
+
+  EXPECT_TRUE(sheerM * p == Point3(5, 3, 4));
+}
+
+// Scenario: A shearing transformation moves x in proportion to z
+// Given transform ← shearing(0, 1, 0, 0, 0, 0)
+// And p ← point(2, 3, 4)
+// Then transform * p = point(6, 3, 4)
+TEST(MatrixTransformationTests, MatrixShearingXToZ) {
+  auto sheerM = Matrix4x4<double>::shear(0, 1, 0, 0, 0, 0);
+  Point3 p(2, 3, 4);
+
+  EXPECT_TRUE(sheerM * p == Point3(6, 3, 4));
+}
+// Scenario: A shearing transformation moves y in proportion to x
+// Given transform ← shearing(0, 0, 1, 0, 0, 0)
+// And p ← point(2, 3, 4)
+// Then transform * p = point(2, 5, 4)
+TEST(MatrixTransformationTests, MatrixShearingYToX) {
+  auto sheerM = Matrix4x4<double>::shear(0, 0, 1, 0, 0, 0);
+  Point3 p(2, 3, 4);
+
+  EXPECT_TRUE(sheerM * p == Point3(2, 5, 4));
+}
+// Scenario: A shearing transformation moves y in proportion to z
+// Given transform ← shearing(0, 0, 0, 1, 0, 0)
+// And p ← point(2, 3, 4)
+// Then transform * p = point(2, 7, 4)
+TEST(MatrixTransformationTests, MatrixShearingYToZ) {
+  auto sheerM = Matrix4x4<double>::shear(0, 0, 0, 1, 0, 0);
+  Point3 p(2, 3, 4);
+
+  EXPECT_TRUE(sheerM * p == Point3(2, 7, 4));
+}
+// Scenario: A shearing transformation moves z in proportion to x
+// Given transform ← shearing(0, 0, 0, 0, 1, 0)
+// And p ← point(2, 3, 4)
+// Then transform * p = point(2, 3, 6)
+TEST(MatrixTransformationTests, MatrixShearingZToX) {
+  auto sheerM = Matrix4x4<double>::shear(0, 0, 0, 0, 1, 0);
+  Point3 p(2, 3, 4);
+
+  EXPECT_TRUE(sheerM * p == Point3(2, 3, 6));
+}
+// report erratum • discussScenario: A shearing transformation moves z in proportion to y
+// Given transform ← shearing(0, 0, 0, 0, 0, 1)
+// And p ← point(2, 3, 4)
+// Then transform * p = point(2, 3, 7)
+TEST(MatrixTransformationTests, MatrixShearingZToY) {
+  auto sheerM = Matrix4x4<double>::shear(0, 0, 0, 0, 0, 1);
+  Point3 p(2, 3, 4);
+
+  EXPECT_TRUE(sheerM * p == Point3(2, 3, 7));
+}
+
+// Scenario: Individual transformations are applied in sequence
+// Given p ← point(1, 0, 1)
+// And A ← rotation_x(π / 2)
+// And B ← scaling(5, 5, 5)
+// And C ← translation(10, 5, 7)
+//# apply rotation first
+// When p2 ← A * p
+// Then p2 = point(1, -1, 0)
+//# then apply scaling
+// When p3 ← B * p2
+// Then p3 = point(5, -5, 0)
+//# then apply translation
+// When p4 ← C * p3
+// Then p4 = point(15, 0, 7)
+
+TEST(MatrixTransformationTests, MatrixSequence) {
+  Point3 p(1, 0, 1);
+  auto rotateXM = Matrix4x4<double>::rotateX(utils::PI / 2);
+  auto scaleM = Matrix4x4<double>::scale(5, 5, 5);
+  auto translationM = Matrix4x4<double>::translation(10, 5, 7);
+  Point3 p2 = rotateXM * p;
+  EXPECT_TRUE(p2 == Point3(1, -1, 0));
+  Point3 p3 = scaleM * p2;
+  EXPECT_TRUE(p3 == Point3(5, -5, 0));
+  Point3 p4 = translationM * p3;
+  EXPECT_TRUE(p4 == Point3(15, 0, 7));
+}
+
+// Scenario: Chained transformations must be applied in reverse order
+// Given p ← point(1, 0, 1)
+// And A ← rotation_x(π / 2)
+// And B ← scaling(5, 5, 5)
+// And C ← translation(10, 5, 7)
+// When T ← C * B * A
+// Then T * p = point(15, 0, 7)
+TEST(MatrixTransformationTests, MatricesCombinedAndMultiplyPoint) {
+  Point3 p(1, 0, 1);
+  auto rotateXM = Matrix4x4<double>::rotateX(utils::PI / 2);
+  auto scaleM = Matrix4x4<double>::scale(5, 5, 5);
+  auto translationM = Matrix4x4<double>::translation(10, 5, 7);
+  auto transformM = translationM * scaleM * rotateXM;
+  EXPECT_TRUE(transformM * p == Point3(15, 0, 7));
+}

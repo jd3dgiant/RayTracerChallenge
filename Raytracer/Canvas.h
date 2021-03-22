@@ -4,7 +4,7 @@
 #include <iostream>
 #include <string>
 #include "Tuples.h"
-
+namespace jdRay {
 class Canvas {
  public:
   Canvas(int inWidth, int inHeight)
@@ -44,3 +44,4 @@ class Canvas {
 
   int clampChannelValue(int inputVal) const;
 };
+} // namespace jdRay

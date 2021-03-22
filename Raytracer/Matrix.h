@@ -1,9 +1,9 @@
 #pragma once
+#include <array>
 #include <vector>
 #include "Tuples.h"
 
 namespace jdRay {
-
 template <typename valueT>
 class Matrix2x2 {
  public:
@@ -205,6 +205,26 @@ class Matrix4x4 {
         m4[12] * rhs.components[0] + m4[13] * rhs.components[1] + m4[14] * rhs.components[2] +
             m4[15] * rhs.components[3]);
   }
+  Vector3 operator*(const Vector3& rhs) const {
+    return Vector3(
+        m4[0] * rhs.components[0] + m4[1] * rhs.components[1] + m4[2] * rhs.components[2] +
+            m4[3] * rhs.components[3],
+        m4[4] * rhs.components[0] + m4[5] * rhs.components[1] + m4[6] * rhs.components[2] +
+            m4[7] * rhs.components[3],
+        m4[8] * rhs.components[0] + m4[9] * rhs.components[1] + m4[10] * rhs.components[2] +
+            m4[11] * rhs.components[3]);
+  }
+
+  // TODO this might cause an error later
+  Point3 operator*(const Point3& rhs) const {
+    return Point3(
+        m4[0] * rhs.components[0] + m4[1] * rhs.components[1] + m4[2] * rhs.components[2] +
+            m4[3] * rhs.components[3],
+        m4[4] * rhs.components[0] + m4[5] * rhs.components[1] + m4[6] * rhs.components[2] +
+            m4[7] * rhs.components[3],
+        m4[8] * rhs.components[0] + m4[9] * rhs.components[1] + m4[10] * rhs.components[2] +
+            m4[11] * rhs.components[3]);
+  }
 
   Matrix4x4 transpose() const {
     std::array<valueT, 16> entries{
@@ -261,11 +281,59 @@ class Matrix4x4 {
     return m4x4;
   }
 
+  static Matrix4x4 rotateX(valueT xRotation) {
+    Matrix4x4 m4x4;
+    valueT cosR = std::cos(xRotation);
+    valueT sinR = std::sin(xRotation);
+    m4x4.m4[5] = cosR;
+    m4x4.m4[6] = -sinR;
+    m4x4.m4[9] = sinR;
+    m4x4.m4[10] = cosR;
+    m4x4.updateInverseCache();
+    return m4x4;
+  }
+
+  static Matrix4x4 rotateY(valueT yRotation) {
+    Matrix4x4 m4x4;
+    valueT cosR = std::cos(yRotation);
+    valueT sinR = std::sin(yRotation);
+    m4x4.m4[0] = cosR;
+    m4x4.m4[2] = sinR;
+    m4x4.m4[8] = -sinR;
+    m4x4.m4[10] = cosR;
+    m4x4.updateInverseCache();
+    return m4x4;
+  }
+
+  static Matrix4x4 rotateZ(valueT zRotation) {
+    Matrix4x4 m4x4;
+    valueT cosR = std::cos(zRotation);
+    valueT sinR = std::sin(zRotation);
+    m4x4.m4[0] = cosR;
+    m4x4.m4[1] = -sinR;
+    m4x4.m4[4] = sinR;
+    m4x4.m4[5] = cosR;
+    m4x4.updateInverseCache();
+    return m4x4;
+  }
+
   static Matrix4x4 scale(valueT x, valueT y, valueT z) {
     Matrix4x4 m4x4;
     m4x4.m4[0] = x;
     m4x4.m4[5] = y;
     m4x4.m4[10] = z;
+    m4x4.updateInverseCache();
+    return m4x4;
+  }
+
+  static Matrix4x4 shear(valueT x_y, valueT x_z, valueT y_x, valueT y_z, valueT z_x, valueT z_y) {
+    Matrix4x4 m4x4;
+    m4x4.m4[1] = x_y;
+    m4x4.m4[2] = x_z;
+    m4x4.m4[4] = y_x;
+    m4x4.m4[6] = y_z;
+    m4x4.m4[8] = z_x;
+    m4x4.m4[9] = z_y;
     m4x4.updateInverseCache();
     return m4x4;
   }

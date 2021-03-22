@@ -2,6 +2,7 @@
 #include <math.h>
 #include <iterator>
 #include "pch.h"
+using namespace jdRay;
 
 Color Canvas::getPixelColor(int index) const {
   return _pixelColors[index];

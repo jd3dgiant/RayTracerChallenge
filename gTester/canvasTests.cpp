@@ -1,5 +1,5 @@
-﻿#include "pch.h"
-#include "Canvas.cpp"
+﻿#include "Canvas.cpp"
+#include "pch.h"
 
 // Scenario: Creating a canvas
 //	Given c ← canvas(10, 20)
@@ -29,11 +29,11 @@ TEST(CanvasTests, WriteColorPixel) {
 // Scenario: Constructing the PPM header
 //	Given c ← canvas(5, 3)
 //	When ppm ← canvas_to_ppm(c) // Then lines 1 - 3 of ppm are
-                                    //"""
-                                    // P3
-                                    // 5 3
-                                    // 255
-                                    //"""
+//"""
+// P3
+// 5 3
+// 255
+//"""
 TEST(CanvasTests, ConstructPPMHeader) {
   Canvas c(5, 3);
 
@@ -69,7 +69,7 @@ TEST(CanvasTests, ConstructPPMPixelData) {
   EXPECT_TRUE(c.canvasToPpm() == testPPMFile);
 }
 
-//Scenario: Splitting long lines in PPM files
+// Scenario: Splitting long lines in PPM files
 //    Given c ← canvas(10, 2)
 //    When every pixel of c is set to color(1, 0.8, 0.6)
 //    And ppm ← canvas_to_ppm(c)
@@ -81,31 +81,30 @@ TEST(CanvasTests, ConstructPPMPixelData) {
 //    153 255 204 153 255 204 153 255 204 153 255 204 153
 //    """
 TEST(CanvasTests, SplittingPPMLines) {
-    Canvas c(10, 2);
-    Color allPixels(1, 0.8, 0.6);
-    for (unsigned i = 0; i < c._totalPixelCount; ++i) {
-        c._pixelColors[i] = allPixels;
-    }
+  Canvas c(10, 2);
+  Color allPixels(1, 0.8, 0.6);
+  for (unsigned i = 0; i < c._totalPixelCount; ++i) {
+    c._pixelColors[i] = allPixels;
+  }
 
-    std::string testPPMFile =
-        "P3\n10 2\n255\n"
-        "255 204 153 255 204 153 255 204 153 255 204 153 255 204 153 255 204\n"
-        "153 255 204 153 255 204 153 255 204 153 255 204 153 255 204 153 255\n"
-        "204 153 255 204 153 255 204 153 255 204 153 255 204 153 255 204 153\n"
-        "255 204 153 255 204 153 255 204 153\n";
-    EXPECT_TRUE(c.canvasToPpm() == testPPMFile);
+  std::string testPPMFile =
+      "P3\n10 2\n255\n"
+      "255 204 153 255 204 153 255 204 153 255 204 153 255 204 153 255 204\n"
+      "153 255 204 153 255 204 153 255 204 153 255 204 153 255 204 153 255\n"
+      "204 153 255 204 153 255 204 153 255 204 153 255 204 153 255 204 153\n"
+      "255 204 153 255 204 153 255 204 153\n";
+  EXPECT_TRUE(c.canvasToPpm() == testPPMFile);
 }
-// Scenario: PPM files are terminated by a newline character     
-//Given c ← canvas(5, 3) 
-//When ppm  ← canvas_to_ppm(c) 
-//Then ppm ends with a newline character
+// Scenario: PPM files are terminated by a newline character
+// Given c ← canvas(5, 3)
+// When ppm  ← canvas_to_ppm(c)
+// Then ppm ends with a newline character
 TEST(CanvasTests, PPMFileNewlineEnding) {
-    Canvas c(5, 3);
+  Canvas c(5, 3);
 
-    std::string ppmFileStr = c.canvasToPpm();
+  std::string ppmFileStr = c.canvasToPpm();
 
-    std::string endingTwoChars =
-                     ppmFileStr.substr(ppmFileStr.length() - 1, ppmFileStr.length() - 1);
+  std::string endingTwoChars = ppmFileStr.substr(ppmFileStr.length() - 1, ppmFileStr.length() - 1);
 
-    EXPECT_TRUE(endingTwoChars == "\n");
+  EXPECT_TRUE(endingTwoChars == "\n");
 }

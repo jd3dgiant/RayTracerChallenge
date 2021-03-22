@@ -15,9 +15,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Raytracer\RayTracerChallenge.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Raytracer\Tuples.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -33,6 +30,15 @@
     <ClCompile Include="Raytracer\utils.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Raytracer\MissleMain.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Raytracer\main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Raytracer\ClockMain.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Raytracer\targetver.h">
@@ -44,9 +50,6 @@
     <ClInclude Include="Raytracer\pch.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Raytracer\RayTracerChallenge.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Raytracer\Canvas.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -54,6 +57,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Raytracer\utils.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Raytracer\MissleMain.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Raytracer\ClockMain.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
