@@ -46,6 +46,7 @@
   <ItemGroup>
     <ClCompile Include="canvasTests.cpp" />
     <ClCompile Include="matrixTests.cpp" />
+    <ClCompile Include="rayTests.cpp" />
     <ClCompile Include="tupleTests.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

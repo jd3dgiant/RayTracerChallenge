@@ -1,6 +1,7 @@
 #pragma once
 #include <array>
 #include <vector>
+#include "Ray.h"
 #include "Tuples.h"
 
 namespace jdRay {
@@ -129,6 +130,9 @@ class Matrix3x3 {
  private:
   const int ROWSIZE = 3;
 };
+// TODO: loss cause?
+// template<double D>
+// using Matrix4x4D = Matrix4x4<D>;
 
 template <typename valueT>
 class Matrix4x4 {
@@ -142,6 +146,9 @@ class Matrix4x4 {
     updateInverseCache();
   }
 
+  Matrix4x4(const std::array<valueT, 16>& matrixVals, const std::array<valueT, 16>& invMatrixVals)
+      : m4(matrixVals), inverseCache(invMatrixVals) {}
+
   Matrix4x4(std::vector<Tuple>& matrixRows) {
     for (unsigned i = 0; i < ROWSIZE; ++i) {
       for (unsigned j = 0; j < ROWSIZE; ++j) {
@@ -149,6 +156,16 @@ class Matrix4x4 {
       }
     }
     updateInverseCache();
+  }
+
+  Matrix4x4(const Matrix4x4& copyM) {
+    m4 = copyM.m4;
+    inverseCache = copyM.inverseCache;
+  }
+
+  void operator=(const Matrix4x4& copyM) {
+    m4 = copyM.m4;
+    inverseCache = copyM.inverseCache;
   }
 
   bool operator==(const Matrix4x4& rhs) const {
@@ -224,6 +241,10 @@ class Matrix4x4 {
             m4[7] * rhs.components[3],
         m4[8] * rhs.components[0] + m4[9] * rhs.components[1] + m4[10] * rhs.components[2] +
             m4[11] * rhs.components[3]);
+  }
+
+  Ray operator*(const Ray& rhs) const {
+    return Ray(operator*(rhs.origin), operator*(rhs.direction));
   }
 
   Matrix4x4 transpose() const {
@@ -338,7 +359,9 @@ class Matrix4x4 {
     return m4x4;
   }
 
-  Matrix4x4 inverse();
+  Matrix4x4 inverse() const {
+    return Matrix4x4(inverseCache, to_array());
+  }
 
   // book implementation
   Matrix4x4 inverseSlow() const;

@@ -49,12 +49,12 @@ class Tuple {
     return !IsVector3();
   }
 
-  bool operator==(const Tuple& rhs) {
+  bool operator==(const Tuple& rhs) const {
     return utils::IsEqual(x(), rhs.x()) && utils::IsEqual(y(), rhs.y()) &&
         utils::IsEqual(z(), rhs.z()) && utils::IsEqual(w(), rhs.w());
   }
 
-  bool operator!=(const Tuple& rhs) {
+  bool operator!=(const Tuple& rhs) const {
     return !operator==(rhs);
   }
 
@@ -84,10 +84,16 @@ class Tuple {
 
 class Vector3 : public Tuple {
  public:
+  Vector3() = default;
+
   Vector3(float in0, float in1, float in2) : Tuple(in0, in1, in2, 0.0) {}
 
   static Vector3 zero() {
     return Vector3(0.0, 0.0, 0.0);
+  }
+
+  bool operator==(const Tuple& rhs) const {
+    return Tuple::operator==(rhs);
   }
 
   Vector3 operator+(const Vector3& rhs) const {
@@ -137,7 +143,13 @@ class Vector3 : public Tuple {
 
 class Point3 : public Tuple {
  public:
+  Point3() = default;
+
   Point3(float in0, float in1, float in2) : Tuple(in0, in1, in2, 1.0) {}
+
+  bool operator==(const Tuple& rhs) const {
+    return Tuple::operator==(rhs);
+  }
 
   Vector3 operator-(const Point3& rhs) const {
     return Vector3(x() - rhs.x(), y() - rhs.y(), z() - rhs.z());
@@ -159,6 +171,10 @@ class Color : public Tuple {
   Color(float in0, float in1, float in2) : Tuple(in0, in1, in2, 1.0) {}
 
   Color(float in0, float in1, float in2, float in3) : Tuple(in0, in1, in2, in3) {}
+
+  bool operator==(const Tuple& rhs) const {
+    return Tuple::operator==(rhs);
+  }
 
   Color operator+(const Color& rhs) const {
     return Color(

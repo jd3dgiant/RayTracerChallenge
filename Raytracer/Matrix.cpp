@@ -48,11 +48,6 @@ Matrix3x3<valueT> Matrix4x4<valueT>::submatrix(int rowRemove, int colRemove) con
 }
 
 template <typename valueT>
-Matrix4x4<valueT> Matrix4x4<valueT>::inverse() {
-  return Matrix4x4<valueT>(inverseCache);
-}
-
-template <typename valueT>
 Matrix4x4<valueT> Matrix4x4<valueT>::inverseSlow() const {
   assert(invertible());
 

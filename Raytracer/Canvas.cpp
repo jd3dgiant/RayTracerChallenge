@@ -31,7 +31,7 @@ std::string Canvas::canvasToPpm(bool headerOnly) {
   std::string ppmBodyStr = "";
   int ppmLineLength = 0;
 
-  for (unsigned i = 0; i < _totalPixelCount; ++i) {
+  for (int i = 0; i < _totalPixelCount; ++i) {
     addColorValueToPPMOutput(ppmLineLength, _pixelColors[i].r(), ppmBodyStr);
     addColorValueToPPMOutput(ppmLineLength, _pixelColors[i].g(), ppmBodyStr);
     addColorValueToPPMOutput(ppmLineLength, _pixelColors[i].b(), ppmBodyStr);

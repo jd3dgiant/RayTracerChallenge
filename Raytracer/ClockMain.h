@@ -5,7 +5,7 @@ class ClockMain {
  public:
   ClockMain() : clockCanvas(CANVASDIMENSIONS, CANVASDIMENSIONS) {
     if (CANVASDIMENSIONS > 2) {
-      float centerPos = (CANVASDIMENSIONS / 2) - 1;
+      float centerPos = float((CANVASDIMENSIONS / 2) - 1);
       centerPoint = Point3(centerPos, centerPos, 0);
     }
   };
